@@ -5651,23 +5651,22 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <contactref element="J9" pad="4"/>
 <contactref element="J1" pad="2"/>
 <contactref element="U4" pad="7"/>
-<wire x1="31.49" y1="3.81" x2="31.871" y2="3.81" width="0.2032" layer="1"/>
-<wire x1="31.49" y1="3.81" x2="30.48" y2="3.81" width="0.2032" layer="1"/>
-<via x="30.48" y="3.81" extent="1-16" drill="0.381"/>
-<wire x1="30.48" y1="3.81" x2="14.605" y2="3.81" width="0.2032" layer="16"/>
+<wire x1="31.49" y1="3.81" x2="29.845" y2="3.81" width="0.2032" layer="1"/>
+<via x="27.432" y="3.81" extent="1-16" drill="0.381"/>
+<wire x1="29.845" y1="3.81" x2="27.432" y2="3.81" width="0.2032" layer="1"/>
+<wire x1="27.432" y1="3.81" x2="14.605" y2="3.81" width="0.2032" layer="16"/>
 <wire x1="13.97" y1="3.175" x2="13.97" y2="1.27" width="0.2032" layer="16"/>
 <wire x1="14.605" y1="3.81" x2="13.97" y2="3.175" width="0.2032" layer="16"/>
 <wire x1="35.56" y1="7.62" x2="35.56" y2="6.35" width="0.2032" layer="16"/>
 <wire x1="35.56" y1="6.35" x2="33.02" y2="3.81" width="0.2032" layer="16"/>
-<wire x1="33.02" y1="3.81" x2="30.48" y2="3.81" width="0.2032" layer="16"/>
+<wire x1="33.02" y1="3.81" x2="27.432" y2="3.81" width="0.2032" layer="16"/>
 <contactref element="R14" pad="2"/>
 <wire x1="12.192" y1="9.398" x2="13.97" y2="7.62" width="0.2032" layer="1"/>
 <wire x1="13.97" y1="7.62" x2="13.97" y2="3.175" width="0.2032" layer="1"/>
 <via x="13.97" y="3.175" extent="1-16" drill="0.381"/>
 <wire x1="180.34" y1="13.2" x2="121.801" y2="13.2" width="0.2032" layer="1"/>
 <wire x1="121.801" y1="13.2" x2="120.523" y2="14.478" width="0.2032" layer="1"/>
-<wire x1="30.988" y1="2.54" x2="30.48" y2="3.048" width="0.2032" layer="1"/>
-<wire x1="30.48" y1="3.048" x2="30.48" y2="3.81" width="0.2032" layer="1"/>
+<wire x1="29.718" y1="3.81" x2="27.432" y2="3.81" width="0.2032" layer="1"/>
 <wire x1="120.523" y1="14.478" x2="66.929" y2="14.478" width="0.2032" layer="1"/>
 <wire x1="66.929" y1="14.478" x2="54.991" y2="2.54" width="0.2032" layer="1"/>
 <wire x1="54.991" y1="2.54" x2="30.988" y2="2.54" width="0.2032" layer="1"/>
@@ -5677,6 +5676,9 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <wire x1="12.192" y1="9.398" x2="8.89" y2="9.398" width="0.2032" layer="1"/>
 <wire x1="8.89" y1="9.398" x2="8.47" y2="9.818" width="0.2032" layer="1"/>
 <wire x1="8.47" y1="9.818" x2="8.47" y2="10.58" width="0.2032" layer="1"/>
+<wire x1="30.988" y1="2.54" x2="30.48" y2="2.54" width="0.1778" layer="1"/>
+<wire x1="30.48" y1="2.54" x2="29.845" y2="3.175" width="0.1778" layer="1"/>
+<wire x1="29.845" y1="3.175" x2="29.845" y2="3.81" width="0.1778" layer="1"/>
 </signal>
 <signal name="SCL/SCK">
 <contactref element="J2" pad="4"/>
@@ -5999,6 +6001,10 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <mfgpreviewcolor name="coppercolor" color="0xFFFFBF00"/>
 <mfgpreviewcolor name="substratecolor" color="0xFF786E46"/>
 </mfgpreviewcolors>
+<errors>
+<approved hash="19,1,147a2d7f7171b8af"/>
+<approved hash="19,1,0435105492493f89"/>
+</errors>
 </board>
 </drawing>
 <compatibility>
