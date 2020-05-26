@@ -40,7 +40,7 @@
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
-<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="yes"/>
@@ -171,6 +171,12 @@
 <wire x1="2.54" y1="0" x2="0" y2="2.54" width="0.2032" layer="20" curve="-90"/>
 <wire x1="182.88" y1="91.44" x2="185.42" y2="88.9" width="0.2032" layer="20" curve="-90"/>
 <wire x1="185.42" y1="2.54" x2="182.88" y2="0" width="0.2032" layer="20" curve="-90"/>
+<dimension x1="0" y1="0" x2="185.42" y2="0" x3="92.71" y3="-5.08" textsize="1.778" layer="47" unit="inch"/>
+<dimension x1="2.54" y1="2.54" x2="0" y2="2.54" x3="1.27" y3="-2.54" textsize="1.778" layer="47" unit="inch"/>
+<dimension x1="2.54" y1="22.86" x2="2.54" y2="0" x3="-2.54" y3="11.43" textsize="1.778" layer="47" unit="inch"/>
+<dimension x1="0" y1="0" x2="0" y2="91.44" x3="-7.62" y3="45.72" textsize="1.778" layer="47" unit="inch"/>
+<dimension x1="2.54" y1="88.9" x2="2.54" y2="91.44" x3="-1.27" y3="90.17" textsize="1.778" layer="47" unit="inch"/>
+<dimension x1="0" y1="88.9" x2="92.71" y2="88.9" x3="46.355" y3="96.52" textsize="1.778" layer="47" unit="inch"/>
 </plain>
 <libraries>
 <library name="SparkFun-Capacitors">
@@ -5862,7 +5868,6 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <via x="13.97" y="3.175" extent="1-16" drill="0.381"/>
 <wire x1="180.34" y1="13.2" x2="121.801" y2="13.2" width="0.2032" layer="1"/>
 <wire x1="121.801" y1="13.2" x2="120.523" y2="14.478" width="0.2032" layer="1"/>
-<wire x1="29.718" y1="3.81" x2="27.432" y2="3.81" width="0.2032" layer="1"/>
 <wire x1="120.523" y1="14.478" x2="66.929" y2="14.478" width="0.2032" layer="1"/>
 <wire x1="66.929" y1="14.478" x2="54.991" y2="2.54" width="0.2032" layer="1"/>
 <wire x1="54.991" y1="2.54" x2="30.988" y2="2.54" width="0.2032" layer="1"/>
@@ -6207,6 +6212,8 @@ These rules have been curated by SparkFuns DFM commitee. After doing much resear
 <errors>
 <approved hash="19,1,147a2d7f7171b8af"/>
 <approved hash="19,1,0435105492493f89"/>
+<approved hash="19,1,d86a3ec5bae3807b"/>
+<approved hash="19,1,1638c2891618fe33"/>
 </errors>
 </board>
 </drawing>
