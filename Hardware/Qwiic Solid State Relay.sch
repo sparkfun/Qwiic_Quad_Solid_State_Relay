@@ -17246,8 +17246,8 @@ Allows current flow when high potential at base.</description>
 <text x="2.54" y="114.3" size="2.54" layer="94" font="vector">Connectors</text>
 <text x="149.86" y="114.3" size="2.54" layer="94" font="vector">ATtiny84</text>
 <text x="63.5" y="114.3" size="2.54" layer="94" font="vector">Programming Header</text>
-<text x="101.6" y="2.54" size="1.27" layer="97" font="vector">Address 0x6D: HIGH (Default)
-Address 0x6C: LOW (Close Jumper)</text>
+<text x="101.6" y="2.54" size="1.27" layer="97" font="vector">Address 0x6D: HIGH (Close Jumper)
+Address 0x6C: LOW (Default)</text>
 <wire x1="119.38" y1="12.7" x2="119.38" y2="7.62" width="0.2032" layer="97" style="dashdot"/>
 <text x="115.824" y="24.638" size="1.27" layer="97" font="vector">Cut jumper 
 to disable LED.</text>
