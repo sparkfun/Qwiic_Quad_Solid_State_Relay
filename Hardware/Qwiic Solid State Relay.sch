@@ -15411,7 +15411,8 @@ to be daisy chained easily.&lt;/p&gt;
 </connects>
 <technologies>
 <technology name="">
-<attribute name="PROD_ID" value="PRT-15900" constant="no"/>
+<attribute name="PROD_ID" value="CONN-14722" constant="no"/>
+<attribute name="STOREFRONT_SKU" value="PRT-15900" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -16975,8 +16976,8 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="-31.775" y1="-3.345" x2="-31.775" y2="-3.845" width="0.2032" layer="51"/>
 <wire x1="-31.775" y1="-3.845" x2="-32.775" y2="-3.845" width="0.2032" layer="51"/>
 <wire x1="-32.775" y1="-3.845" x2="-32.775" y2="-3.345" width="0.2032" layer="51"/>
-<pad name="1" x="-34.925" y="1.905" drill="1.2" diameter="2.032" shape="square" rot="R270"/>
-<pad name="2" x="-34.925" y="-1.595" drill="1.2" diameter="2.032" rot="R270"/>
+<pad name="4" x="-34.925" y="1.905" drill="1.2" diameter="2.032" shape="square" rot="R270"/>
+<pad name="3" x="-34.925" y="-1.595" drill="1.2" diameter="2.032" rot="R270"/>
 <pad name="H1" x="-23.5" y="0" drill="3.73" diameter="5.6"/>
 <pad name="H2" x="23.49" y="0" drill="3.73" diameter="5.6"/>
 </package>
@@ -17137,8 +17138,8 @@ Allows current flow when high potential at base.</description>
 <devices>
 <device name="" package="SSR-40DA-H">
 <connects>
-<connect gate="G$1" pin="+" pad="2"/>
-<connect gate="G$1" pin="-" pad="1"/>
+<connect gate="G$1" pin="+" pad="3"/>
+<connect gate="G$1" pin="-" pad="4"/>
 </connects>
 <technologies>
 <technology name="">
