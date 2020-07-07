@@ -1,40 +1,34 @@
-SparkFun Qwiic Quad Relay
+SparkFun Qwiic Quad Solid State Relay Kit
 ========================================
 
-![SparkFun Qwiic Quad Relay](https://cdn.sparkfun.com/assets/parts/1/3/4/6/2/15102-SparkFun_Qwiic_Quad_Relay-01a.jpg)
+![SparkFun Qwiic Dual Solid State Relay](URL for picture of part)
 
-[*SparkFun Qwiic Quad Relay (COM-15102)*](https://www.sparkfun.com/products/15102)
-The Qwiic Quad Relay is a product designed for switching not one, but **four** high powered devices, from your Arduino or other low powered microcontroller using I<sup>2</sup>C. It's rocking four [relays](https://www.sparkfun.com/products/100) on its' PCB rated up to 5 Amps per channel at 250VAC. Each channel is sporting its own colored LED and silk for easy identification, and has screw terminals for easy connection. 
+[*SparkFun Qwiic Dual Solid State Relay Kit (KIT-16833)*](https://www.sparkfun.com/products/16833)
 
-The board is made to integrate easily into the [Qwiic environment](https://www.sparkfun.com/qwiic) with Qwiic connectors on each side for easy daisy chaining. At the heart of the product is an ATtiny84 with its own I<sup>2</sup>C address awaiting for I<sup>2</sup>C commands that are designated to turn on and off individual channels or _all_ the channels at once! All of this is detailed nicely in provided example code, which also walks you through changing the boards single I<sup>2</sup>C address. There is a four pin header broken out for those of you not taking advantage of the Qwiic connector.
+The SparkFun Quad Dual Solid State Relay comes with four solid state relays you can assemble on to a single board allowing you to control all of them from a microcontroller via I<sup>2</sup>C with the Qwiic Ecosystem. The relays are rated for 40A @28-380VAC allowing you to harness some serious high voltage power from simple I<sup>2</sup>C commands from your favorite microcontroller.
 
-The onboard barrel jack is rated for wall warts in the range, 7-15V but there is a jumper on the underside in the case that your wall wart is 5V. Messing with such high voltage can be dangerous! We've included many safety precautions onto the PCB including, wide traces designed for high amperage, ground isolation between the relay and other circuitry, and a milled out area around the common pin of the relay.
+The Qwiic Quad Solid State Relay comes fully assembled and uses the simple [Qwiic interface](https://www.sparkfun.com/qwiic). No soldering, no voltage translation, no figuring out which pin is SDA or SCL, just plug and go!
+
+**Note:** Controlling high voltage (110/220VAC) requires certain precautions. A beginner can do it but if you're wary of working with high voltage, you may want to consider the pre-made [IoT Power Relay](https://www.sparkfun.com/products/14236). It's not controlled via I<sup>2</sup>C but the IoT Power Relay contains shielding to prevent accidental shock.
 
 Repository Contents
 -------------------
 
-* **/Firmware** - Latest firmware and examples. 
-* **/Arduino Example** - Examples on how to use the product with buttons and switches, with hardware interrupts and without.
+* **/Documentation** - Data sheets, additional product information
+* **/Firmware** - Latest firmware
 * **/Hardware** - Eagle design files (.brd, .sch)
-
-FUSE BITS
-----------
-
-(Set fuses to run at 8MHz internal)
-(Disable Brown Out Detect)
-
-* LowFuse 0xE2 
-* HighFuse 0xDF
-* ExtendedFuse 0xFF
+* **/Production** - Production panel files (.brd)
 
 Documentation
 --------------
+* **[SparkFun Qwiic Relay Arduino Library](https://github.com/sparkfun/SparkFun_Qwiic_Relay_Arduino_Library)** - Arduino library for SparkFun Qwiic Relay boards.
+* **[Hookup Guide](https://learn.sparkfun.com/tutorials/sparkfun-qwiic-quad-solid-state-relay-kit-hookup-guide)** - Basic hookup guide for the Qwiic Dual Solid State Relay.
+* **[SparkFun Fritzing repo](https://github.com/sparkfun/Fritzing_Parts)** - Fritzing diagrams for SparkFun products.
+* **[SparkFun 3D Model repo](https://github.com/sparkfun/3D_Models)** - 3D models of SparkFun products. 
 
-* **[Hookup Guide](https://learn.sparkfun.com/tutorials/qwiic-quad-relay-hookup-guide)** - Basic hookup guide
-
-Arduino Library
---------------
-* **[SparkFun Qwiic Relay Ardruino Library](https://github.com/sparkfun/SparkFun_Qwiic_Relay_Arduino_Library)** - SparkFun Arduino Library for controlloing the Qwiic Single and Quad Relay
+Product Versions
+----------------
+* [KIT-16833](https://www.sparkfun.com/products/16810)- Initial release of the Qwiic Quad Solid State Relay Kit.
 
 License Information
 -------------------
@@ -43,9 +37,7 @@ This product is _**open source**_!
 
 Please review the LICENSE.md file for license information. 
 
-If you have any questions or concerns on licensing, please contact techsupport@sparkfun.com.
-
-Please use, reuse, and modify these files as you see fit. Please maintain attribution to SparkFun Electronics and release under the same license.
+If you have any questions or concerns on licensing, please contact technical support on our [SparkFun forums](https://forum.sparkfun.com/viewforum.php?f=152).
 
 Distributed as-is; no warranty is given.
 
