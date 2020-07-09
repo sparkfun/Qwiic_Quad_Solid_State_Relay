@@ -22,8 +22,8 @@
 #include <EEPROM.h>
 
 #define LOCATION_I2C_ADDRESS 0x01 //Location in EEPROM where the I2C address is stored
-#define I2C_ADDRESS_DEFAULT 8 //0x6D Default address
-#define I2C_ADDRESS_JUMPER 9 //0x6C Address if address jumper is closed
+#define I2C_ADDRESS_DEFAULT 8 //0x08 Default address
+#define I2C_ADDRESS_JUMPER 9 //0x09 Address if address jumper is closed
 
 #define COMMAND_CHANGE_ADDRESS 0xC7
 
@@ -39,14 +39,14 @@
 #define RELAY_TWO_TOGGLE 0x02
 #define RELAY_THREE_TOGGLE 0x03
 #define RELAY_FOUR_TOGGLE 0x04
-#define RELAY_ONE_PWM 0x05
-#define RELAY_TWO_PWM 0x06
-#define RELAY_THREE_PWM 0x07
-#define RELAY_FOUR_PWM 0x08
+#define RELAY_ONE_PWM 0x09
+#define RELAY_TWO_PWM 0x0A
+#define RELAY_THREE_PWM 0x0B
+#define RELAY_FOUR_PWM 0x0C
 
 #define SLOW_PWM_FREQUENCY 1
 #define SLOW_PWM_MS SLOW_PWM_FREQUENCY * 1000 //Time for one full PWM cycle
-#define SLOW_PWM_RESOLUTION 100
+#define SLOW_PWM_RESOLUTION 120
 #define SLOW_PWM_STEP_TIME SLOW_PWM_MS / SLOW_PWM_RESOLUTION // Time per LSB in ms
 
 #define TURN_ALL_OFF 0xA
@@ -55,10 +55,10 @@
 
 // Commands to request the state of the relay, whether it is currently on or
 // off.
-#define RELAY_STATUS_ONE  0x09
-#define RELAY_STATUS_TWO  0x0A
-#define RELAY_STATUS_THREE 0x0B
-#define RELAY_STATUS_FOUR 0x0C
+#define RELAY_STATUS_ONE  0x05
+#define RELAY_STATUS_TWO  0x06
+#define RELAY_STATUS_THREE 0x07
+#define RELAY_STATUS_FOUR 0x08
 
 // Messages for requests that state whether a relay is on or off.
 #define RELAY_IS_ON 0xF
@@ -70,18 +70,14 @@ volatile uint8_t COMMAND;  //Variable for incoming I2C commands.
 const uint8_t addrPin = 7;
 const uint8_t resetPin = 11;
 
-// The four relay pins on the ATtiny84A.
-const uint8_t RELAY_ONE = 0;
-const uint8_t RELAY_TWO = 1;
-const uint8_t RELAY_THREE = 2;
-const uint8_t RELAY_FOUR = 3;
-
 // This 'status' array keeps track of the state of the relays.
 uint8_t status[] = {RELAY_IS_OFF, RELAY_IS_OFF, RELAY_IS_OFF, RELAY_IS_OFF};
 uint8_t pwmValues[] = {0, 0, 0, 0};
 uint8_t relayPins[] = {RELAY_ONE, RELAY_TWO, RELAY_THREE, RELAY_FOUR};
 uint32_t pwmOffTime[] = {0, 0, 0, 0};
 uint32_t startTime = 0;
+uint32_t now = 0;
+uint32_t elapsed = 0;
 bool beginPWM = true;
 
 void setup(void)
@@ -101,7 +97,6 @@ void loop(void) {
   if (beginPWM == true)
   {
     startTime = millis();
-    endTime = startTime + SLOW_PWM_MS;
     beginPWM = false;
   }
   for (uint8_t relayNum = 0; relayNum < NUM_RELAYS; relayNum++)
@@ -109,6 +104,7 @@ void loop(void) {
     if ((pwmValues[relayNum] != 0) && (pwmOffTime[relayNum] == 0))
     {
       digitalWrite(relayNum, HIGH);
+      status[relayNum] = RELAY_IS_ON;
       pwmOffTime[relayNum] = startTime + (pwmValues[relayNum] * SLOW_PWM_STEP_TIME);
     }
   }
@@ -119,11 +115,15 @@ void loop(void) {
       if (pwmOffTime[relayNum] < millis())
       {
         digitalWrite(relayNum, LOW);
+
+        status[relayNum] = RELAY_IS_OFF;
       }
     }
   }
-  if (endTime < millis())
-  { 
+  now = millis();
+  elapsed = now - startTime;
+  if (elapsed >= SLOW_PWM_MS)
+  {
     beginPWM = true;
     for (uint8_t relayNum = 0; relayNum < NUM_RELAYS; relayNum++)
     {
@@ -206,21 +206,33 @@ void receiveEvent(int numberOfBytesReceived)
     }
 
     else if (COMMAND == RELAY_ONE_PWM) {
-      pwmValues[RELAY_ONE] = Wire.read();
+      if (Wire.available())
+      {
+        pwmValues[0] = Wire.read();
+      }
     }
 
     else if (COMMAND == RELAY_TWO_PWM) {
-      pwmValues[RELAY_TWO] = Wire.read();
+      if (Wire.available())
+      {
+        pwmValues[1] = Wire.read();
+      }
     }
 
     else if (COMMAND == RELAY_THREE_PWM) {
-      pwmValues[RELAY_THREE] = Wire.read();
+      if (Wire.available())
+      {
+        pwmValues[2] = Wire.read();
+      }
     }
 
     else if (COMMAND == RELAY_FOUR_PWM) {
-      pwmValues[RELAY_FOUR] = Wire.read();
+      if (Wire.available())
+      {
+        pwmValues[3] = Wire.read();
+      }
     }
-    
+
     // Turn all relays off, record all of their states.
     else if (COMMAND == TURN_ALL_OFF) {
       digitalWrite(RELAY_ONE, LOW);
@@ -275,24 +287,24 @@ void requestEvent()
   // state of relay three and relay four(0x08). If you request the state of
   // three relays, starting with four, you'll get four(0x08), one(0x05),
   // two(0x06) etc.
-  
+
   if (COMMAND == RELAY_ONE_PWM) {
-    Wire.write(pwmValues[RELAY_ONE]);
+    Wire.write(pwmValues[0]);
     COMMAND++;
   }
-  else if (COMMAND == RELAY_TWO_PWM) {
-    Wire.write(pwmValues[RELAY_TWO]);
+  if (COMMAND == RELAY_TWO_PWM) {
+    Wire.write(pwmValues[1]);
     COMMAND++;
   }
-  else if (COMMAND == RELAY_THREE_PWM) {
-    Wire.write(pwmValues[RELAY_THREE]);
+  if (COMMAND == RELAY_THREE_PWM) {
+    Wire.write(pwmValues[2]);
     COMMAND++;
   }
-  else if (COMMAND == RELAY_FOUR_PWM) {
-    Wire.write(pwmValues[RELAY_FOUR]);
+  if (COMMAND == RELAY_FOUR_PWM) {
+    Wire.write(pwmValues[3]);
     COMMAND++;
   }
-  else if (COMMAND == RELAY_STATUS_ONE) {
+  if (COMMAND == RELAY_STATUS_ONE) {
     Wire.write(status[0]);
     COMMAND++;
   }
@@ -305,7 +317,7 @@ void requestEvent()
     COMMAND++;
   }
   if (COMMAND == RELAY_STATUS_FOUR) {
-    Wire.write(status[3]);
+    Wire.write(status[3]); 
     COMMAND = 0x05;
   }
 }
