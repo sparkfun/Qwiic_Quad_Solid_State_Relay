@@ -1,3 +1,4 @@
+
 /*
   An I2C based KeyPad
   By: Elias Santistevan
@@ -111,14 +112,11 @@ void loop(void) {
   elapsed = now - startTime;
   for (uint8_t relayNum = 0; relayNum < NUM_RELAYS; relayNum++)
   {
-    if (pwmValues[relayNum] != 0)
+    if ((SLOW_PWM_STEP_TIME * pwmValues[relayNum]) < elapsed)
     {
-      if ((SLOW_PWM_STEP_TIME * pwmValues[relayNum]) < elapsed)
-      {
-        digitalWrite(relayNum, LOW);
+      digitalWrite(relayNum, LOW);
 
-        status[relayNum] = RELAY_IS_OFF;
-      }
+      status[relayNum] = RELAY_IS_OFF;
     }
   }
   now = millis();
@@ -308,7 +306,7 @@ void requestEvent()
   if (COMMAND == RELAY_ONE_PWM) {
     Wire.write(pwmValues[0]);
     COMMAND++;
-  } 
+  }
   if (COMMAND == RELAY_TWO_PWM) {
     Wire.write(pwmValues[1]);
     COMMAND++;
