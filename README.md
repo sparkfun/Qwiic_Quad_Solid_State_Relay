@@ -1,13 +1,13 @@
 SparkFun Qwiic Quad Solid State Relay Kit
 ========================================
 
-![SparkFun Qwiic Dual Solid State Relay](URL for picture of part)
+![SparkFun Qwiic Dual Solid State Relay](https://cdn.sparkfun.com/assets/parts/1/5/7/5/4/16833-SparkFun_Qwiic_Quad_Solid_State_Relay_Kit-01.jpg)
 
 [*SparkFun Qwiic Dual Solid State Relay Kit (KIT-16833)*](https://www.sparkfun.com/products/16833)
 
-The SparkFun Quad Dual Solid State Relay comes with four solid state relays you can assemble on to a single board allowing you to control all of them from a microcontroller via I<sup>2</sup>C with the Qwiic Ecosystem. The relays are rated for 40A @28-380VAC allowing you to harness some serious high voltage power from simple I<sup>2</sup>C commands from your favorite microcontroller.
+The SparkFun Quad Solid State Relay Kit comes with four solid state relays you can assemble on to a single board allowing you to control all of them from a microcontroller via I<sup>2</sup>C with the Qwiic Ecosystem. The relays are rated for 40A @28-380VAC allowing you to harness some serious high voltage power from simple I<sup>2</sup>C commands from your favorite microcontroller.
 
-The Qwiic Quad Solid State Relay comes fully assembled and uses the simple [Qwiic interface](https://www.sparkfun.com/qwiic). No soldering, no voltage translation, no figuring out which pin is SDA or SCL, just plug and go!
+The Qwiic Quad Solid State Relay comes requires some basic assembly to attach the relays and connect your AC load. It uses the simple [Qwiic interface](https://www.sparkfun.com/qwiic). No soldering, no voltage translation, no figuring out which pin is SDA or SCL, just plug and go!
 
 **Note:** Controlling high voltage (110/220VAC) requires certain precautions. A beginner can do it but if you're wary of working with high voltage, you may want to consider the pre-made [IoT Power Relay](https://www.sparkfun.com/products/14236). It's not controlled via I<sup>2</sup>C but the IoT Power Relay contains shielding to prevent accidental shock.
 
