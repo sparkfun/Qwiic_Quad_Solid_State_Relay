@@ -39,16 +39,15 @@
 #define RELAY_TWO_TOGGLE 0x02
 #define RELAY_THREE_TOGGLE 0x03
 #define RELAY_FOUR_TOGGLE 0x04
-#define RELAY_ONE_PWM 0x09
-#define RELAY_TWO_PWM 0x0A
-#define RELAY_THREE_PWM 0x0B
-#define RELAY_FOUR_PWM 0x0C
+#define RELAY_ONE_PWM 0x10
+#define RELAY_TWO_PWM 0x11
+#define RELAY_THREE_PWM 0x12
+#define RELAY_FOUR_PWM 0x13
 
 #define SLOW_PWM_FREQUENCY 1
 #define SLOW_PWM_MS SLOW_PWM_FREQUENCY * 1000 //Time for one full PWM cycle
-#define SLOW_PWM_RESOLUTION 120
+#define SLOW_PWM_RESOLUTION 120.0
 #define SLOW_PWM_STEP_TIME SLOW_PWM_MS / SLOW_PWM_RESOLUTION // Time per LSB in ms
-
 #define TURN_ALL_OFF 0xA
 #define TURN_ALL_ON 0xB
 #define TOGGLE_ALL 0xC
@@ -108,11 +107,13 @@ void loop(void) {
       pwmOffTime[relayNum] = startTime + (pwmValues[relayNum] * SLOW_PWM_STEP_TIME);
     }
   }
+  now = millis();
+  elapsed = now - startTime;
   for (uint8_t relayNum = 0; relayNum < NUM_RELAYS; relayNum++)
   {
     if (pwmValues[relayNum] != 0)
     {
-      if (pwmOffTime[relayNum] < millis())
+      if ((SLOW_PWM_STEP_TIME * pwmValues[relayNum]) < elapsed)
       {
         digitalWrite(relayNum, LOW);
 
@@ -288,22 +289,6 @@ void requestEvent()
   // three relays, starting with four, you'll get four(0x08), one(0x05),
   // two(0x06) etc.
 
-  if (COMMAND == RELAY_ONE_PWM) {
-    Wire.write(pwmValues[0]);
-    COMMAND++;
-  }
-  if (COMMAND == RELAY_TWO_PWM) {
-    Wire.write(pwmValues[1]);
-    COMMAND++;
-  }
-  if (COMMAND == RELAY_THREE_PWM) {
-    Wire.write(pwmValues[2]);
-    COMMAND++;
-  }
-  if (COMMAND == RELAY_FOUR_PWM) {
-    Wire.write(pwmValues[3]);
-    COMMAND++;
-  }
   if (COMMAND == RELAY_STATUS_ONE) {
     Wire.write(status[0]);
     COMMAND++;
@@ -317,7 +302,23 @@ void requestEvent()
     COMMAND++;
   }
   if (COMMAND == RELAY_STATUS_FOUR) {
-    Wire.write(status[3]); 
+    Wire.write(status[3]);
+    COMMAND++;
+  }
+  if (COMMAND == RELAY_ONE_PWM) {
+    Wire.write(pwmValues[0]);
+    COMMAND++;
+  } 
+  if (COMMAND == RELAY_TWO_PWM) {
+    Wire.write(pwmValues[1]);
+    COMMAND++;
+  }
+  if (COMMAND == RELAY_THREE_PWM) {
+    Wire.write(pwmValues[2]);
+    COMMAND++;
+  }
+  if (COMMAND == RELAY_FOUR_PWM) {
+    Wire.write(pwmValues[3]);
     COMMAND = 0x05;
   }
 }
