@@ -94,15 +94,16 @@ void setup(void)
 }
 
 void loop(void) {
-  if (beginPWM == true)
-  {
-    startTime = millis();
-    beginPWM = false;
-  }
+
   for (uint8_t relayNum = 0; relayNum < NUM_RELAYS; relayNum++)
   {
     if ((pwmValues[relayNum] != 0) && (pwmOffTime[relayNum] == 0))
     {
+      if (beginPWM == true)
+      {
+        startTime = millis();
+        beginPWM = false;
+      }
       digitalWrite(relayNum, HIGH);
       status[relayNum] = RELAY_IS_ON;
       pwmOffTime[relayNum] = startTime + (pwmValues[relayNum] * SLOW_PWM_STEP_TIME);
@@ -112,7 +113,7 @@ void loop(void) {
   elapsed = now - startTime;
   for (uint8_t relayNum = 0; relayNum < NUM_RELAYS; relayNum++)
   {
-    if ((SLOW_PWM_STEP_TIME * pwmValues[relayNum]) < elapsed)
+    if ((SLOW_PWM_STEP_TIME * pwmValues[relayNum]) < elapsed && beginPWM == false)
     {
       digitalWrite(relayNum, LOW);
 
