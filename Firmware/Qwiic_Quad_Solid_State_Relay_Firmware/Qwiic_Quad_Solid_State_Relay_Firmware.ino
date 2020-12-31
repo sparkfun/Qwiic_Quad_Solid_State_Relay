@@ -60,15 +60,19 @@
 #define RELAY_STATUS_THREE 0x07
 #define RELAY_STATUS_FOUR 0x08
 
+// Request firmware version
+#define RELAY_FIRMWARE_VERSION_REQUEST 0x30
+
 // Messages for requests that state whether a relay is on or off.
 #define RELAY_IS_ON 0xF
 #define RELAY_IS_OFF 0x0
 
 volatile uint8_t setting_i2c_address = I2C_ADDRESS_DEFAULT;
-volatile uint8_t COMMAND;  //Variable for incoming I2C commands.
+volatile uint8_t COMMAND = 0;  //Variable for incoming I2C commands
 
 const uint8_t addrPin = 7;
 const uint8_t resetPin = 11;
+const uint8_t firmwareVersion = 0x02;
 
 // This 'status' array keeps track of the state of the relays.
 uint8_t status[] = {RELAY_IS_OFF, RELAY_IS_OFF, RELAY_IS_OFF, RELAY_IS_OFF};
@@ -94,14 +98,14 @@ void setup(void)
 }
 
 void loop(void) {
-
+  now = millis();
   for (uint8_t relayNum = 0; relayNum < NUM_RELAYS; relayNum++)
   {
     if ((pwmValues[relayNum] != 0) && (pwmOffTime[relayNum] == 0))
     {
       if (beginPWM == true)
       {
-        startTime = millis();
+        startTime = now;
         beginPWM = false;
       }
       digitalWrite(relayNum, HIGH);
@@ -109,19 +113,20 @@ void loop(void) {
       pwmOffTime[relayNum] = startTime + (pwmValues[relayNum] * SLOW_PWM_STEP_TIME);
     }
   }
-  now = millis();
+  // Only continue if we're in a PWM processing cycle
+  if (beginPWM == true) return;
+  
   elapsed = now - startTime;
   for (uint8_t relayNum = 0; relayNum < NUM_RELAYS; relayNum++)
   {
-    if ((SLOW_PWM_STEP_TIME * pwmValues[relayNum]) < elapsed && beginPWM == false)
+    // If this relay is using PWM and it's time to turn this one off.
+    if (pwmValues[relayNum] > 0 && 
+        (SLOW_PWM_STEP_TIME * pwmValues[relayNum]) < elapsed)
     {
-      digitalWrite(relayNum, LOW);
-
+      digitalWrite(relayPins[relayNum], LOW);
       status[relayNum] = RELAY_IS_OFF;
     }
   }
-  now = millis();
-  elapsed = now - startTime;
   if (elapsed >= SLOW_PWM_MS)
   {
     beginPWM = true;
@@ -153,124 +158,68 @@ void receiveEvent(int numberOfBytesReceived)
       }
     }
 
-    // Relay control for relay 1, check the state, toggle the relay, change the
-    // state.
-    else if (COMMAND == RELAY_ONE_TOGGLE) {
-      if (status[0] == RELAY_IS_OFF) {
-        digitalWrite(RELAY_ONE, HIGH);
-        status[0] = RELAY_IS_ON;
+    else if (COMMAND >= RELAY_ONE_TOGGLE && COMMAND <= RELAY_FOUR_TOGGLE) {
+      int relay = COMMAND - RELAY_ONE_TOGGLE;
+      // IF we are using PWM, toggling always turns off.
+      if (pwmValues[relay] == 0 && status[relay] == RELAY_IS_OFF) {
+        digitalWrite(relayPins[relay], HIGH);
+        status[relay] = RELAY_IS_ON;
       }
-      else if (status[0] == RELAY_IS_ON ) {
-        digitalWrite(RELAY_ONE, LOW);
-        status[0] = RELAY_IS_OFF;
+      else if (pwmValues[relay] > 0 || status[relay] == RELAY_IS_ON ) {
+        digitalWrite(relayPins[relay], LOW);
+        status[relay] = RELAY_IS_OFF;
       }
+      pwmValues[relay] = 0;
     }
 
-    // Relay control for relay 2, check the state, toggle the relay, change the
-    // state.
-    else if (COMMAND == RELAY_TWO_TOGGLE) {
-      if (status[1] == RELAY_IS_OFF) {
-        digitalWrite(RELAY_TWO, HIGH);
-        status[1] = RELAY_IS_ON;
-      }
-      else if (status[1] == RELAY_IS_ON ) {
-        digitalWrite(RELAY_TWO, LOW);
-        status[1] = RELAY_IS_OFF;
-      }
-    }
-
-    // Relay control for relay 3, check the state, toggle the relay, change the
-    // state.
-    else if (COMMAND == RELAY_THREE_TOGGLE) {
-      if (status[2] == RELAY_IS_OFF) {
-        digitalWrite(RELAY_THREE, HIGH);
-        status[2] = RELAY_IS_ON;
-      }
-      else if (status[2] == RELAY_IS_ON ) {
-        digitalWrite(RELAY_THREE, LOW);
-        status[2] = RELAY_IS_OFF;
-      }
-    }
-
-    // Relay control for relay 4, check the state, toggle the relay, change the
-    // state.
-    else if (COMMAND == RELAY_FOUR_TOGGLE) {
-      if (status[3] == RELAY_IS_OFF) {
-        digitalWrite(RELAY_FOUR, HIGH);
-        status[3] = RELAY_IS_ON;
-      }
-      else if (status[3] == RELAY_IS_ON ) {
-        digitalWrite(RELAY_FOUR, LOW);
-        status[3] = RELAY_IS_OFF;
-      }
-    }
-
-    else if (COMMAND == RELAY_ONE_PWM) {
+    else if (COMMAND >= RELAY_ONE_PWM && COMMAND <= RELAY_FOUR_PWM) {
+      int relay = COMMAND - RELAY_ONE_PWM;
       if (Wire.available())
       {
-        pwmValues[0] = Wire.read();
-      }
-    }
-
-    else if (COMMAND == RELAY_TWO_PWM) {
-      if (Wire.available())
-      {
-        pwmValues[1] = Wire.read();
-      }
-    }
-
-    else if (COMMAND == RELAY_THREE_PWM) {
-      if (Wire.available())
-      {
-        pwmValues[2] = Wire.read();
-      }
-    }
-
-    else if (COMMAND == RELAY_FOUR_PWM) {
-      if (Wire.available())
-      {
-        pwmValues[3] = Wire.read();
+        pwmValues[relay] = Wire.read();
+        if (pwmValues[relay] == 0.0) {
+          digitalWrite(relayPins[relay], LOW);
+          status[relay] = RELAY_IS_OFF;
+        }
       }
     }
 
     // Turn all relays off, record all of their states.
     else if (COMMAND == TURN_ALL_OFF) {
-      digitalWrite(RELAY_ONE, LOW);
-      digitalWrite(RELAY_TWO, LOW);
-      digitalWrite(RELAY_THREE, LOW);
-      digitalWrite(RELAY_FOUR, LOW);
-      for (int i = 0; i < sizeof(status); i++) {
+      for (int i = 0; i < NUM_RELAYS; i++) {
+        digitalWrite(relayPins[i], LOW);
         status[i] = RELAY_IS_OFF;
+        pwmValues[i] = 0;
       }
     }
 
     // Turn it up to ELEVEN, all on! Record their states to the status array.
     else if (COMMAND == TURN_ALL_ON) {
-      digitalWrite(RELAY_ONE, HIGH);
-      digitalWrite(RELAY_TWO, HIGH);
-      digitalWrite(RELAY_THREE, HIGH);
-      digitalWrite(RELAY_FOUR, HIGH);
-      for (int i = 0; i < sizeof(status); i++) {
+      for (int i = 0; i < NUM_RELAYS; i++) {
+        digitalWrite(relayPins[i], HIGH);
         status[i] = RELAY_IS_ON;
+        pwmValues[i] = 0;
       }
     }
 
     // This command will put each relay into it's opposite state: relays that
     // are on will be turned off and vice versa.
     else if (COMMAND == TOGGLE_ALL) {
-      for (int i = 0; i < sizeof(status); i++) {
+      for (int i = 0; i < NUM_RELAYS; i++) {
         if (status[i] == RELAY_IS_ON) {
           // Remember that the relays are on pins 0-4, which aligns with the
           // status array. With that, I'll be using the iterator 'i' to write
           // the pins HIGH and LOW.
-          digitalWrite(i, LOW);
+          digitalWrite(relayPins[i], LOW);
           status[i] = RELAY_IS_OFF;
+          pwmValues[i] = 0;
           continue;
         }
         //Would be an else statement, but for clarity....
         else if (status[i] == RELAY_IS_OFF) {
-          digitalWrite(i, HIGH);
+          digitalWrite(relayPins[i], HIGH);
           status[i] = RELAY_IS_ON;
+          pwmValues[i] = 0;
         }
       }
     }
@@ -280,45 +229,14 @@ void receiveEvent(int numberOfBytesReceived)
 
 void requestEvent()
 {
-  // In the you want to request multiple relay states without having to do
-  // multiple "requestFrom"'s in code, the request COMMAND will iterate through
-  // the sequential response commands (0x05 -> 0x08). For example, if you
-  // request 2 bytes, starting with relay three (0x07), then you'll receive the
-  // state of relay three and relay four(0x08). If you request the state of
-  // three relays, starting with four, you'll get four(0x08), one(0x05),
-  // two(0x06) etc.
-
-  if (COMMAND == RELAY_STATUS_ONE) {
-    Wire.write(status[0]);
-    COMMAND++;
-  }
-  if (COMMAND == RELAY_STATUS_TWO) {
-    Wire.write(status[1]);
-    COMMAND++;
-  }
-  if (COMMAND == RELAY_STATUS_THREE) {
-    Wire.write(status[2]);
-    COMMAND++;
-  }
-  if (COMMAND == RELAY_STATUS_FOUR) {
-    Wire.write(status[3]);
-    COMMAND++;
-  }
-  if (COMMAND == RELAY_ONE_PWM) {
-    Wire.write(pwmValues[0]);
-    COMMAND++;
-  }
-  if (COMMAND == RELAY_TWO_PWM) {
-    Wire.write(pwmValues[1]);
-    COMMAND++;
-  }
-  if (COMMAND == RELAY_THREE_PWM) {
-    Wire.write(pwmValues[2]);
-    COMMAND++;
-  }
-  if (COMMAND == RELAY_FOUR_PWM) {
-    Wire.write(pwmValues[3]);
-    COMMAND = 0x05;
+  if (COMMAND >= RELAY_STATUS_ONE && COMMAND <= RELAY_STATUS_FOUR) {
+    int relay = COMMAND - RELAY_STATUS_ONE;
+    Wire.write(status[relay]);
+  } else if (COMMAND >= RELAY_ONE_PWM && COMMAND <= RELAY_FOUR_PWM) {
+    int relay = COMMAND - RELAY_ONE_PWM;
+    Wire.write(pwmValues[relay]);
+  } else if (COMMAND == RELAY_FIRMWARE_VERSION_REQUEST) {
+    Wire.write(firmwareVersion);
   }
 }
 
