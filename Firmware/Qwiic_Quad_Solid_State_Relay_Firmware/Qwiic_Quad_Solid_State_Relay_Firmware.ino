@@ -177,6 +177,10 @@ void receiveEvent(int numberOfBytesReceived)
       if (Wire.available())
       {
         pwmValues[relay] = Wire.read();
+        if (pwmValues[relay] == 0.0) {
+          digitalWrite(relayPins[relay], LOW);
+          status[relay] = RELAY_IS_OFF;
+        }
       }
     }
 

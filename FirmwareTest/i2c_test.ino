@@ -91,6 +91,14 @@ void pwmtest() {
   send(0x02); // 2
   send(0x02); // 2
   delay(4000);
+
+  Serial.println("1 PWM 120");
+  send2(0x10, 120);
+  delay(4000);
+
+  Serial.println("1 OFF via PWM 0.0");
+  send2(0x10, 0);
+  delay(4000);
 }
 
 void onofftest() {
