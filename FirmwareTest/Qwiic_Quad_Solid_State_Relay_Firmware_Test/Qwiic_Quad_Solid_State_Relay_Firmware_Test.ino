@@ -45,11 +45,11 @@ void read(uint8_t reg) {
 }
 
 void loop() {
-  onofftest();
-  pwmtest();
-
   Serial.println("Firmware version:");
   read(0x30);
+  delay(1000);
+  onofftest();
+  pwmtest();
 }
 
 void pwmtest() {
